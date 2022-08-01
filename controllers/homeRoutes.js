@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const { Post, Comment, User } = require('../models');
-const withAuth = require('../utils/withAuth');
+const withAuth = require('../utils/auth');
 
 router.get('/', async(req, res) => {
     try {
 // get all posts and JOIN with user data         
-const postData = await Post.findAll({
+    const postData = await Post.findAll({
             include: [
                 {
                     model: User,
@@ -44,7 +44,7 @@ const postData = await Post.findAll({
 
             // Pass serial data and session flag into the template
             console.log('blogs', blogs);
-            res.render(`homepage`, {
+            res.render('homepage', {
                 blogs,
                 logged_in: req.session.logged_in,
                 });
@@ -84,6 +84,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
         res.render('login');
     });
+
     router.get('/create-blog', (req, res) => {
         // If the user is already logged in, redirect the request to another route.
     // if (req.session.logged_in) {
@@ -91,7 +92,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
     //     return;
     // }
 
-    res.render('create-blog'{
+    res.render('create-blog',{
         logged_in: true,
 });
     });
@@ -107,10 +108,11 @@ router.get('/edit-blog', (req, res) => {
             content: "content",
             author: "author",
             date: "1/17/2022"
-    },
+    };
+
     res.render('edit-blog',{
         ...blog,
-        logged_in: true;
+        logged_in: true,
 });
 });
 
